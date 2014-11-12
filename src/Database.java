@@ -43,29 +43,34 @@ public class Database {
              * cause the database to be created when connecting for the first
              * time. 
              */
+            
             props.put("user", "");
             props.put("password", "");
             try{
+            
             conn = DriverManager.getConnection("jdbc:derby:" + dbName
                     + ";create=true", props);
+            
             conn.setAutoCommit(false);
             s = conn.createStatement();
            
+            System.out.println("0");
 
             // We create a table... table cruise
             s.executeUpdate("create table student(StudentID int, Name varchar(40), "
                     + "Gender varchar(40), Program varchar(40), Age int, "
                     + "Nationalities varchar(40), primary key(StudentID))");
-            psInsert = conn.prepareStatement("insert into student values (?, ?, ?, ?)");
+            System.out.println("1.0");
+            psInsert = conn.prepareStatement("insert into student values (?, ?, ?, ?, ?, ?)");
+            System.out.println("1.1");
             
             String[] FirstNames = {"Bob", "Jill", "Tom", "Brandon", "Joan", "Ethel", "Albert", "Hpward", "Roy", "Annie", "Alice", "Ruby", "Donald", "Carl", "Bonnie", "Lisa", "Scott", "Sean", "Morgan", "Oliva"};
             String[] LastNames = {"Matthew", "Nathan", "Aaron", "Zachary", "Jadon", "Matteo", "Harrison", "Titus", "Magnus", "Jax", "Jude", "Dexter", "Sawyer", "Beckett", "Miles", "Land", "Letitia", "Leopold", "Louise", "Lucretia"};
             String[] Gender = {"Male", "Female"};
             String[] Programs = {"MISM", "MSPPM", "MSIT"};
             String[] Nationalities = {"China", "Japan", "USA", "Korea", "Australia", "India"};
-            
-            
-
+   
+System.out.println("1");
             for (int i = 1; i < 85; i++) { 
                 psInsert.setInt(1, i);
                 int index1 = (int) (Math.random() * FirstNames.length);
@@ -82,18 +87,17 @@ public class Database {
                 
                 psInsert.executeUpdate();
             }
-
-        
+            System.out.println("2");
             //table passenger
-            s.execute("create table visit(VisitID int, StudentID int, "
-                    + "date Long(40), category varchar(40), "
-                    + "primary key(VisitID), foreign key(StudentID)");
-            psInsert = conn.prepareStatement("insert into passenger values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            s.executeUpdate("create table visit(VisitID int, StudentID int, "
+                    + "date double, category varchar(40), primary key(VisitID))");
+            System.out.println("2.0");
+            psInsert = conn.prepareStatement("insert into visit values (?, ?, ?, ?)");
             
-           
+            
             String[] Categories = {"stapler","tuition fee", "complaints", "collect assignments","meet people"};
             //SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM, dd");
-            
+            System.out.println("2.1");
 	    
             
             for(int i=1; i<1001; i++){
@@ -107,12 +111,18 @@ public class Database {
                 psInsert.executeUpdate();
                 
             }
- 
-           
-
             
-
+            System.out.println("3");
+            
             conn.commit();
+            
+            System.out.println("Generate Report");
+            rs = s.executeQuery("SELECT * FROM student");
+           
+            while (rs.next()) {
+                System.out.println(rs.getInt("StudentID")+" "+rs.getString(2)+" "+rs.getString(3)+" "+rs.getString(4)+" "+rs.getInt(5)+" "+rs.getString(6));
+            }
+            System.out.println("");
 
             }catch(SQLException ex){
                 

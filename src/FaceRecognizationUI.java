@@ -79,6 +79,11 @@ public class FaceRecognizationUI extends javax.swing.JFrame {
         });
 
         month1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        month1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                month1ActionPerformed(evt);
+            }
+        });
 
         month2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
 
@@ -343,33 +348,50 @@ public class FaceRecognizationUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_year2ActionPerformed
 
-    private void setVal(Date date,int iday,int iselMonth,int iselYear) 
-{ 
-gc.setTime(date); 
-if(iselMonth==0 || iselMonth==2 || iselMonth==4 || iselMonth==6 || iselMonth== 7 ||iselMonth==9 || iselMonth==11) 
-{ 
-totdays=31; 
-setButtons(iday,totdays); 
-} 
+    private void month1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_month1ActionPerformed
+        // TODO add your handling code here:
+        int Year1 = (int) year1.getSelectedItem();
+        int Month1 = (int) month1.getSelectedItem();
+        this.setValue(null, NORMAL, YEAR, totdays);
+    }//GEN-LAST:event_month1ActionPerformed
 
-if(iselMonth==3 || iselMonth==5 || iselMonth==8 || iselMonth==10) 
-{ 
-totdays=30; 
-setButtons(iday,totdays); 
-} 
+    private void setValue(Date date,int iselMonth,int iselYear, int buttonNo){
+ 
+        gc.setTime(date);
+        if(iselMonth==0 || iselMonth==2 || iselMonth==4 || iselMonth==6 || iselMonth== 7 ||iselMonth==9 || iselMonth==11) { 
+            totdays=31; 
+            this.setDayNumber(buttonNo, totdays);
+        } 
+        if(iselMonth==3 || iselMonth==5 || iselMonth==8 || iselMonth==10) { 
+            totdays=30; 
+            this.setDayNumber(buttonNo, totdays);
+        } 
+        if(gc.isLeapYear(iselYear) && iselMonth==1) { 
+            totdays=29;
+            this.setDayNumber(buttonNo, totdays);
+        } 
+        if( !gc.isLeapYear(iselYear) && iselMonth==1) { 
+            totdays=28;
+            this.setDayNumber(buttonNo, totdays);
+        } 
 
-if(gc.isLeapYear(iselYear) && iselMonth==1) 
-{ 
-totdays=29; 
-setButtons(iday,totdays); 
-} 
-if( !gc.isLeapYear(iselYear) && iselMonth==1) 
-{ 
-totdays=28; 
-setButtons(iday,totdays); 
-} 
+  
 
 } 
+    public void setDayNumber(int totdays, int buttonNo){
+        if(buttonNo == 1){
+            for(int i=1; i<totdays+1; i++){
+            day1.addItem(i);
+        }
+        }else{
+              for(int i=1; i<totdays+1; i++){
+            day2.addItem(i);
+        }
+        }
+        
+    }
+    
+
     /**
      * @param args the command line arguments
      */
@@ -400,6 +422,7 @@ setButtons(iday,totdays);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                Database db = new Database();
                 new FaceRecognizationUI().setVisible(true);
             }
         });
